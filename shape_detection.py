@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 import random
 import math
+import clips
 def euclidian_dist(x1,y1,x2,y2):
     return ((x1-x2)**2 + (y1-y2)**2)**(0.5)
 def makeAngle(a,b,c):
@@ -44,7 +45,7 @@ for i,c in enumerate(contours):
     epsilon = 0.01 * cv2.arcLength(c, True)
     approx = cv2.approxPolyDP(c, epsilon, closed=True)
 cv2.drawContours(white, [approx], -1, (0, 255, 255), 1)
-print(approx)
+print('approx\n',approx)
 side = len(approx)
 lengthSide = []
 Nodes = []
@@ -55,10 +56,13 @@ for i in range(side):
     b = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1]);
     c = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i)%side][0][0],approx[(i)%side][0][1]);
     Angles.append(makeAngle(a,b,c))
-print(Angles)
-print(Nodes)
+print('angles\n',Angles)
+print('nodes\n',Nodes)
 #cv2.imshow("Binary",white)
 #Checking the number of filtered contours
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+env = clips.Environment()
+
