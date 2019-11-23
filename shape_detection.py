@@ -26,7 +26,7 @@ def makeAngle(a,b,c):
     return np.arccos((a**2+b**2-c**2)/(2*a*b))*(180/np.pi)
 
 # Reading  image
-img = cv2.imread("trapesiumSamaKaki.jpg",1)
+img = cv2.imread("segitigaSamaSisi.png",1)
 white = cv2.imread("white.png",1)
 
 # Displaying to see how it looks
@@ -70,17 +70,17 @@ angles = []
 # Create angle
 for i in range(side):
     nodes.append([approx[i][0][0],approx[i][0][1]])
-    a = euclidian_dist(approx[i%side][0][0],approx[i%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1]);
-    b = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1]);
-    c = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i)%side][0][0],approx[(i)%side][0][1]);
+    a = euclidian_dist(approx[i%side][0][0],approx[i%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1])
+    b = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1])
+    c = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i)%side][0][0],approx[(i)%side][0][1])
     angles.append(makeAngle(a,b,c))
 
 # Test angles and node has been built before
-print(angles)
-print(nodes)
+print("angles\n",angles)
+print("nodes\n",nodes)
 
 #Checking the number of filtered contours
-cv2.imshow("Binary",white)
+# cv2.imshow("Binary",white)
 
 # Using to close currently opened windows 
 cv2.waitKey(0)
