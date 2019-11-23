@@ -12,6 +12,8 @@ import numpy as np
 import cv2
 import random
 import math
+import sys
+import rules
 
 # Calculate euclidian distance
 # Input : point1 (x1, y1), point2 (x2,y2)
@@ -25,8 +27,13 @@ def euclidian_dist(x1,y1,x2,y2):
 def makeAngle(a,b,c):
     return np.arccos((a**2+b**2-c**2)/(2*a*b))*(180/np.pi)
 
+try:
+    filename = sys.argv[1]
+except:
+    filename = 'segitigaSembarang.png'
+
 # Reading  image
-img = cv2.imread("segitigaSamaSisi.png",1)
+img = cv2.imread('images/'+filename,1)
 white = cv2.imread("white.png",1)
 
 # Displaying to see how it looks
@@ -83,5 +90,11 @@ print("nodes\n",nodes)
 # cv2.imshow("Binary",white)
 
 # Using to close currently opened windows 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+
+
+####SHAPE DETECTION USING KNOWLEDGE BASED RULES####
+# Using Clipspy, A python interface for CLIPS
+
+rules.detect_shape(angles, nodes)
