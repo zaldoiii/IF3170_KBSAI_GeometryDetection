@@ -11,3 +11,12 @@ The code does the following in sequence:
 - Finding all Countours in the processed image
 - Filtering countours based on their area
 - Initializing a new image and drawing the filtered contours 
+
+## Distribution of Work
+Almost we are doing it together
+------------------------
+NIM | Name | Work |
+13517062 | Ardysatrio Fakhri H    | clipspy exploration |
+13517071 | Marsa Thoriq Ahmada    | opencv exploration |
+13517098 | Anzaldi Sulaiman Oemar | GUI exploration |
+13517149 | Fajar Muslim           | create rule |
