@@ -1,8 +1,18 @@
 import tkinter as tk
-#from PIL import Image, ImageTk
+import tkinter.ttk as ttk
 from tkinter import filedialog
 
+#import shape_detection
+#import
+
 gui = tk.Tk()
+
+def euclidian_dist(x1,y1,x2,y2):
+	return ((x1-x2)**2 + (y1-y2)**2)**(0.5)
+
+def makeAngle(a,b,c):
+	return np.arccos((a**2+b**2-c**2)/(2*a*b))*(180/np.pi)
+
 
 def bukaFoto():
 	global namaFile
@@ -86,16 +96,29 @@ labelQuestion.configure(highlightbackground="#d9d9d9")
 labelQuestion.configure(highlightcolor="black")
 labelQuestion.configure(text='''What shape do you want?''')
 
-shapeList = tk.Listbox(master=gui)
-shapeList.place(relx=0.81, rely=0.247, relheight=0.28, relwidth=0.15)
-shapeList.configure(background="white")
-shapeList.configure(disabledforeground="#a3a3a3")
-shapeList.configure(font="TkFixedFont")
-shapeList.configure(foreground="#000000")
-shapeList.configure(highlightbackground="#d9d9d9")
-shapeList.configure(highlightcolor="black")
-shapeList.configure(selectbackground="#c4c4c4")
-shapeList.configure(selectforeground="black")
+shapeList = ttk.Treeview(master=gui)
+shapeList.place(relx=0.81, rely=0.247, relheight=0.28, width=150)
+shapeList.insert('', '0', 'A', text = 'Segitiga')
+shapeList.insert('A', '0', 'A1', text = 'Segitiga lancip')
+shapeList.insert('A', '1', 'A2', text = 'Segitiga tumpul')
+shapeList.insert('A', '2', 'A3', text = 'Segitiga siku-siku')
+shapeList.insert('A', '3', 'A4', text = 'Segitiga sama kaki')
+shapeList.insert('A4', '0', 'A41', text = 'Segitiga sama kaki siku-siku')
+shapeList.insert('A4', '1', 'A42', text = 'Segitiga sama kaki tumpul')
+shapeList.insert('A4', '2', 'A43', text = 'Segitiga sama kaki lancip')
+shapeList.insert('A', '4', 'A5', text = 'Segitiga sama sisi')
+shapeList.insert('', '1', 'B', text = 'Segiempat')
+shapeList.insert('B', '0', 'B1', text = 'Jajaran genjang')
+shapeList.insert('B1', '0', 'B11', text = 'Segiempat beraturan')
+shapeList.insert('B1', '1', 'B12', text = 'Layang-layang')
+shapeList.insert('B', '1', 'B2', text = 'Trapesium')
+shapeList.insert('B2', '0', 'B21', text = 'Trapesium sama kaki')
+shapeList.insert('B2', '1', 'B22', text = 'Trapesium rata kanan')
+shapeList.insert('B2', '2', 'B23', text = 'Trapesium rata kiri')
+shapeList.insert('', '2', 'C', text = 'Segi lima')
+shapeList.insert('C', '0', 'C1', text = 'Segi lima sama sisi')
+shapeList.insert('', '3', 'D', text = 'Segi enam')
+shapeList.insert('D', '0', 'D1', text = 'Segi lima sama sisi')
 
 detectionList = tk.Listbox(master=gui)
 detectionList.place(relx=0.02, rely=0.587, relheight=0.333, relwidth=0.25)
@@ -118,6 +141,8 @@ factList.configure(highlightbackground="#d9d9d9")
 factList.configure(highlightcolor="black")
 factList.configure(selectbackground="#c4c4c4")
 factList.configure(selectforeground="black")
+factList.insert("end", "zzz")
+factList.insert("end", "ttt")
 
 rulesList = tk.Listbox(master=gui)
 rulesList.place(relx=0.71, rely=0.587, relheight=0.333, relwidth=0.25)
