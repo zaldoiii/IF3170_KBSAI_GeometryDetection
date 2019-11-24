@@ -14,9 +14,11 @@ The code does the following in sequence:
 
 ## Distribution of Work
 Almost we are doing it together
-------------------------
+
 NIM | Name | Work |
+| --- | --- | --- | --- |
 13517062 | Ardysatrio Fakhri H    | clipspy exploration |
 13517071 | Marsa Thoriq Ahmada    | opencv exploration |
 13517098 | Anzaldi Sulaiman Oemar | GUI exploration |
 13517149 | Fajar Muslim           | create rule |
+
