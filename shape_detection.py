@@ -73,6 +73,7 @@ side = len(approx)
 # Initiate container to store node ang angles information
 nodes = []
 angles = []
+sides = []
 
 # Create angle
 for i in range(side):
@@ -81,10 +82,12 @@ for i in range(side):
     b = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i+1)%side][0][0],approx[(i+1)%side][0][1])
     c = euclidian_dist(approx[(i+2)%side][0][0],approx[(i+2)%side][0][1],approx[(i)%side][0][0],approx[(i)%side][0][1])
     angles.append(makeAngle(a,b,c))
+    sides.append(a)
 
 # Test angles and node has been built before
 print("angles\n",angles)
 print("nodes\n",nodes)
+print("sides\n",sides)
 
 #Checking the number of filtered contours
 # cv2.imshow("Binary",white)
@@ -97,4 +100,4 @@ print("nodes\n",nodes)
 ####SHAPE DETECTION USING KNOWLEDGE BASED RULES####
 # Using Clipspy, A python interface for CLIPS
 
-rules.detect_shape(angles, nodes)
+rules.detect_shape(angles, nodes, sides)
