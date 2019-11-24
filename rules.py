@@ -16,9 +16,14 @@ def detect_shape(angles, nodes, sides):
     new_fact['jumlah'] = len(angles)
     new_fact.assertit()
 
+
     fact_polygon_name = """
     (deftemplate polygon
         (slot nama (type SYMBOL))
+        (slot tx1 (type INTEGER))
+        (slot tx2 (type INTEGER))
+        (slot tx3 (type INTEGER))
+        (slot tx4 (type INTEGER))
         (slot sisi1 (type FLOAT))
         (slot sisi2 (type FLOAT))
         (slot sisi3 (type FLOAT))
@@ -140,25 +145,32 @@ def detect_shape(angles, nodes, sides):
             =>
             (printout t "Polygon: Segi Empat" crlf)
             (assert (polygon (nama segiempat)))
+            (assert (polygon (sudut1 """+str(angles[0])+""")))    
+            (assert (polygon (sudut2 """+str(angles[1])+""")))
+            (assert (polygon (sudut3 """+str(angles[2])+""")))
+            (assert (polygon (sudut4 """+str(angles[3])+""")))
             (assert (polygon (sisi1 """+str(sides[0])+""")))
             (assert (polygon (sisi2 """+str(sides[1])+""")))
             (assert (polygon (sisi3 """+str(sides[2])+""")))
-            (assert (polygon (sisi4 """+str(sides[3])+"""))))
+            (assert (polygon (sisi4 """+str(sides[3])+""")))
+            (assert (polygon (tx1 """+str(nodes[0][0])+""")))
+            (assert (polygon (tx2 """+str(nodes[1][0])+""")))
+            (assert (polygon (tx3 """+str(nodes[2][0])+""")))
+            (assert (polygon (tx4 """+str(nodes[3][0])+""")))
+            )
         """
         env.build(rule_sisi_string)
         rule_panjang_sisi_string = """
         (defrule define-segiempat-beraturan
-            (polygon (sisi1 ?s1))
-            (polygon (sisi2 ?s2))
-            (polygon (sisi3 ?s3))
-            (polygon (sisi3 ?s4))
+            (polygon (sudut1 ?s1))
+            (polygon (sudut2 ?s2))
+            (polygon (sudut3 ?s3))
+            (polygon (sudut4 ?s4))
             (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 3))
-            (test (acceptable-error (?s1 ?s2 1)))
-            (test (acceptable-error (?s1 ?s3 1)))
-            (test (acceptable-error (?s1 ?s4 1)))
-            (test (acceptable-error (?s2 ?s3 1)))
-            (test (acceptable-error (?s2 ?s4 1)))
-            (test (acceptable-error (?s3 ?s4 1)))
+            (test (acceptable-error ?s1 ?s2 2))
+            (test (acceptable-error ?s2 ?s3 2))
+            (test (acceptable-error ?s3 ?s4 2))
+            (test (acceptable-error ?s1 ?s4 2)) 
             =>
             (printout t "Polygon: Segi Empat Beraturan" crlf)
             (assert (polygon (nama segiempatberaturan))))
@@ -169,11 +181,11 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut1 ?s1))
             (polygon (sudut2 ?s2))
             (polygon (sudut3 ?s3))
-            (polygon (sudut3 ?s4))
-            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 3))
+            (polygon (sudut4 ?s4))
+            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
             (or
-                (and (acceptable-error ?s1 ?s3 1) (inequal (?s2 ?s4 1)))
-                (and (acceptable-error ?s2 ?s4 1) (inequal (?s1 ?s3 1)))
+                (test(and (acceptable-error ?s1 ?s3 3) (inequal ?s2 ?s4 3)))
+                (test(and (acceptable-error ?s2 ?s4 3) (inequal ?s1 ?s3 3)))
             )
             =>
             (printout t "Polygon: Segi Empat Layang-Layang" crlf)
@@ -186,17 +198,87 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut2 ?s2))
             (polygon (sudut3 ?s3))
             (polygon (sudut4 ?s4))
-            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 3))
+            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
             (or
-                (and (acceptable-error ?s2 ?s3 1) (inequal (?s1 ?s2 1)))
-                (and (acceptable-error ?s2 ?s1 1) (inequal (?s2 ?s3 1)))
+                (test(and (acceptable-error ?s2 ?s3 1) (inequal ?s1 ?s2 1)))
+                (test(and (acceptable-error ?s2 ?s1 1) (inequal ?s2 ?s3 1)))
             )
             =>
             (printout t "Polygon: Trapesium Sama Kaki" crlf)
             (assert (polygon (nama trapesiumsamakaki))))
         """
         env.build(rule_panjang_sisi_string)
+        rule_panjang_sisi_string = """
+        (defrule define-trapesium-samakaki
+            (polygon (sudut1 ?s1))
+            (polygon (sudut2 ?s2))
+            (polygon (sudut3 ?s3))
+            (polygon (sudut4 ?s4))
+            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
+            (or
+                (test(and (acceptable-error ?s2 ?s3 1) (inequal ?s1 ?s2 1)))
+                (test(and (acceptable-error ?s2 ?s1 1) (inequal ?s2 ?s3 1)))
+            )
+            =>
+            (printout t "Polygon: Trapesium Sama Kaki" crlf)
+            (assert (polygon (nama trapesiumsamakaki))))
+        """
+        env.build(rule_panjang_sisi_string)
+        rule_panjang_sisi_string = """
+        (defrule define-trapesium-rata
+            (polygon (sudut1 ?s1))
+            (polygon (sudut2 ?s2))
+            (polygon (sudut3 ?s3))
+            (polygon (sudut4 ?s4))
+            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
+            (and
+                (test(or (acceptable-error ?s1 90.0 3) (acceptable-error ?s3 90.0 3)))
+                (test(or (acceptable-error ?s2 90.0 3) (acceptable-error ?s4 90.0 3)))
+            )
+            =>
+            (printout t "Polygon: Trapesium Rata" crlf)
+            (assert (polygon (nama trapesiumrata))))
+        """
+        env.build(rule_panjang_sisi_string)
+        rule_panjang_sisi_string = """
+        (defrule define-trapesium-rata-kiri
+            (polygon (tx1 ?s1))
+            (polygon (tx2 ?s2))
+            (polygon (tx3 ?s3))
+            (polygon (tx4 ?s4))
+            (polygon (nama trapesiumrata))
+            (or
+                (test(and (acceptable-error ?s1 ?s2 4) (< ?s2 ?s3)))
+                (test(and (acceptable-error ?s2 ?s3 4) (< ?s3 ?s4)))
+                (test(and (acceptable-error ?s3 ?s4 4) (< ?s4 ?s1)))
+                (test(and (acceptable-error ?s4 ?s1 4) (< ?s1 ?s2)))
+            )
+            
+            =>
+            (printout t "Polygon: Trapesium Rata Kiri" crlf)
+            (assert (polygon (nama trapesiumratakiri))))
+        """
+        env.build(rule_panjang_sisi_string)
 
+        rule_panjang_sisi_string = """
+        (defrule define-trapesium-rata-kanan
+            (polygon (tx1 ?s1))
+            (polygon (tx2 ?s2))
+            (polygon (tx3 ?s3))
+            (polygon (tx4 ?s4))
+            (polygon (nama trapesiumrata))
+            (not (polygon (nama trapesiumratakiri)))
+            (or
+                (test(and (acceptable-error ?s1 ?s2 5) (> ?s2 ?s3)))
+                (test(and (acceptable-error ?s2 ?s3 5) (> ?s3 ?s4)))
+                (test(and (acceptable-error ?s3 ?s4 5) (> ?s4 ?s1)))
+                (test(and (acceptable-error ?s4 ?s1 5) (> ?s1 ?s2)))
+            )
+            =>
+            (assert (polygon (nama trapesiumratakanan))))
+            (printout t "Polygon: Trapesium Rata Kanan" crlf)
+        """
+        env.build(rule_panjang_sisi_string)
     if(len(angles) == 5):
         #SEGILIMA
         rule_sisi_string = """

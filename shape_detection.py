@@ -61,7 +61,7 @@ for i,c in enumerate(contours):
 	# If it has significant area, add to list
     epsilon = 0.01 * cv2.arcLength(c, True)
     approx = cv2.approxPolyDP(c, epsilon, closed=True)
-
+    print(approx)
 cv2.drawContours(white, [approx], -1, (0, 255, 255), 1)
 
 # Check line that has been recognize
@@ -90,7 +90,7 @@ print("nodes\n",nodes)
 print("sides\n",sides)
 
 #Checking the number of filtered contours
-# cv2.imshow("Binary",white)
+#cv2.imwrite("Binary.png",white)
 
 # Using to close currently opened windows 
 # cv2.waitKey(0)
