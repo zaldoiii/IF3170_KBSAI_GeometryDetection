@@ -60,10 +60,12 @@ def detect_shape(angles, nodes, sides):
         (defrule define-polygon-segitiga
             (sisi (jumlah 3))
             =>
-            (assert (polygon (nama segitiga)))
-            (assert (polygon (sudut1 """+str(angles[0])+""")))
-            (assert (polygon (sudut2 """+str(angles[1])+""")))
-            (assert (polygon (sudut3 """+str(angles[2])+"""))))
+            (assert (polygon (nama segitiga)
+            			(sudut1 """+str(angles[0])+""")
+            			(sudut2 """+str(angles[1])+""")
+            			(sudut3 """+str(angles[2])+""")
+					)
+		)
         """
         env.build(rule_sisi_string)
         rule_panjang_sisi_string = """
@@ -114,7 +116,7 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut2 ?s2))
             (polygon (sudut3 ?s3))
             (test (acceptable-error (+ ?s1 ?s2 ?s3) 180.0 3))
-            (test (or (> ?s1 90.0) (> ?s2 90.0) (> ?s3 90.0)))
+            (test (or (> ?s1 92.0) (> ?s2 92.0) (> ?s3 92.0)))
             =>
             (printout t "Polygon: Segitiga Tumpul" crlf)
             (assert (polygon (nama segitigatumpul))))
@@ -123,7 +125,6 @@ def detect_shape(angles, nodes, sides):
         rule_panjang_sisi_string = """
         (defrule define-segitiga-lancip
             (not (polygon (nama segitigasamasisi)))
-            (not (polygon (nama segitigasamakaki)))
             (polygon (sudut1 ?s1))
             (polygon (sudut2 ?s2))
             (polygon (sudut3 ?s3))
@@ -144,20 +145,22 @@ def detect_shape(angles, nodes, sides):
             (sisi (jumlah 4))
             =>
             (printout t "Polygon: Segi Empat" crlf)
-            (assert (polygon (nama segiempat)))
-            (assert (polygon (sudut1 """+str(angles[0])+""")))    
-            (assert (polygon (sudut2 """+str(angles[1])+""")))
-            (assert (polygon (sudut3 """+str(angles[2])+""")))
-            (assert (polygon (sudut4 """+str(angles[3])+""")))
-            (assert (polygon (sisi1 """+str(sides[0])+""")))
-            (assert (polygon (sisi2 """+str(sides[1])+""")))
-            (assert (polygon (sisi3 """+str(sides[2])+""")))
-            (assert (polygon (sisi4 """+str(sides[3])+""")))
-            (assert (polygon (tx1 """+str(nodes[0][0])+""")))
-            (assert (polygon (tx2 """+str(nodes[1][0])+""")))
-            (assert (polygon (tx3 """+str(nodes[2][0])+""")))
-            (assert (polygon (tx4 """+str(nodes[3][0])+""")))
+            (assert (polygon (nama segiempat)
+						(sudut1 """+str(angles[0])+""")    
+						(sudut2 """+str(angles[1])+""")
+						(sudut3 """+str(angles[2])+""")
+						(sudut4 """+str(angles[3])+""")
+						(sisi1 """+str(sides[0])+""")
+						(sisi2 """+str(sides[1])+""")
+						(sisi3 """+str(sides[2])+""")
+						(sisi4 """+str(sides[3])+""")
+						(tx1 """+str(nodes[0][0])+""")
+						(tx2 """+str(nodes[1][0])+""")
+						(tx3 """+str(nodes[2][0])+""")
+						(tx4 """+str(nodes[3][0])+""")
+					)
             )
+		)
         """
         env.build(rule_sisi_string)
         rule_panjang_sisi_string = """
@@ -166,11 +169,15 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut2 ?s2))
             (polygon (sudut3 ?s3))
             (polygon (sudut4 ?s4))
+            (polygon (sisi1 ?t1))
+            (polygon (sisi2 ?t2))
+            (polygon (sisi3 ?t3))
+            (polygon (sisi4 ?t4))
             (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 3))
-            (test (acceptable-error ?s1 ?s2 2))
-            (test (acceptable-error ?s2 ?s3 2))
-            (test (acceptable-error ?s3 ?s4 2))
-            (test (acceptable-error ?s1 ?s4 2)) 
+            (test (acceptable-error ?t1 ?t2 3))
+            (test (acceptable-error ?t2 ?t3 3))
+            (test (acceptable-error ?t3 ?t4 3))
+            (test (acceptable-error ?t1 ?t4 3)) 
             =>
             (printout t "Polygon: Segi Empat Beraturan" crlf)
             (assert (polygon (nama segiempatberaturan))))
@@ -200,24 +207,8 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut4 ?s4))
             (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
             (or
-                (test(and (acceptable-error ?s2 ?s3 1) (inequal ?s1 ?s2 1)))
-                (test(and (acceptable-error ?s2 ?s1 1) (inequal ?s2 ?s3 1)))
-            )
-            =>
-            (printout t "Polygon: Trapesium Sama Kaki" crlf)
-            (assert (polygon (nama trapesiumsamakaki))))
-        """
-        env.build(rule_panjang_sisi_string)
-        rule_panjang_sisi_string = """
-        (defrule define-trapesium-samakaki
-            (polygon (sudut1 ?s1))
-            (polygon (sudut2 ?s2))
-            (polygon (sudut3 ?s3))
-            (polygon (sudut4 ?s4))
-            (test (acceptable-error (+ ?s1 ?s2 ?s3 ?s4) 360.0 5))
-            (or
-                (test(and (acceptable-error ?s2 ?s3 1) (inequal ?s1 ?s2 1)))
-                (test(and (acceptable-error ?s2 ?s1 1) (inequal ?s2 ?s3 1)))
+                (test(and (acceptable-error ?s2 ?s3 2) (inequal ?s1 ?s2 1)))
+                (test(and (acceptable-error ?s2 ?s1 2) (inequal ?s2 ?s3 1)))
             )
             =>
             (printout t "Polygon: Trapesium Sama Kaki" crlf)
@@ -286,7 +277,15 @@ def detect_shape(angles, nodes, sides):
             (sisi (jumlah 5))
             =>
             (printout t "Polygon: Segi Lima" crlf)
-            (assert (polygon (nama segilima))))
+            (assert (polygon (nama segilima)
+                            (sudut1 """+str(angles[0])+""")
+                            (sudut2 """+str(angles[1])+""")
+                            (sudut3 """+str(angles[2])+""")
+                            (sudut4 """+str(angles[3])+""")
+                            (sudut5 """+str(angles[4])+""")
+                    )
+            )
+        )
         """
         env.build(rule_sisi_string)
         rule_panjang_sisi_string = """
@@ -296,11 +295,11 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut3 ?s3))
             (polygon (sudut4 ?s4))
             (polygon (sudut5 ?s5))
-            (test (acceptable-error ?s1 72.0 1.0) )
-            (test (acceptable-error ?s2 72.0 1.0) )
-            (test (acceptable-error ?s3 72.0 1.0) )
-            (test (acceptable-error ?s4 72.0 1.0) )
-            (test (acceptable-error ?s5 72.0 1.0) )
+            (test (acceptable-error ?s1 108 2.5) )
+            (test (acceptable-error ?s2 108 2.5) )
+            (test (acceptable-error ?s3 108 2.5) )
+            (test (acceptable-error ?s4 108 2.5) )
+            (test (acceptable-error ?s5 108 2.5) )
             =>
             (printout t "Polygon: Segi Lima Sama Sisi" crlf)
             (assert (polygon (nama segilimasamasisi))))
@@ -315,7 +314,16 @@ def detect_shape(angles, nodes, sides):
             (sisi (jumlah 6))
             =>
             (printout t "Polygon: Segi Enam" crlf)
-            (assert (polygon (nama segienam))))
+            (assert (polygon (nama segienam)
+                            (sudut1 """+str(angles[0])+""")
+                            (sudut2 """+str(angles[1])+""")
+                            (sudut3 """+str(angles[2])+""")
+                            (sudut4 """+str(angles[3])+""")
+                            (sudut5 """+str(angles[4])+""")
+                            (sudut6 """+str(angles[5])+""")
+                    )
+            )
+        )
         """
         env.build(rule_sisi_string)
         rule_panjang_sisi_string = """
@@ -326,12 +334,12 @@ def detect_shape(angles, nodes, sides):
             (polygon (sudut4 ?s4))
             (polygon (sudut5 ?s5))
             (polygon (sudut6 ?s6))
-            (test (acceptable-error ?s1 60.0 1.0) )
-            (test (acceptable-error ?s2 60.0 1.0) )
-            (test (acceptable-error ?s3 60.0 1.0) )
-            (test (acceptable-error ?s4 60.0 1.0) )
-            (test (acceptable-error ?s5 60.0 1.0) )
-            (test (acceptable-error ?s6 60.0 1.0) )
+            (test (acceptable-error ?s1 120.0 2.5) )
+            (test (acceptable-error ?s2 120.0 2.5) )
+            (test (acceptable-error ?s3 120.0 2.5) )
+            (test (acceptable-error ?s4 120.0 2.5) )
+            (test (acceptable-error ?s5 120.0 2.5) )
+            (test (acceptable-error ?s6 120.0 2.5) )
             =>
             (printout t "Polygon: Segi Enam Sama Sisi" crlf)
             (assert (polygon (nama segienamsamasisi))))
@@ -345,9 +353,19 @@ def detect_shape(angles, nodes, sides):
 
     #activate rules
     #get result
-    # for activation in  env.activations():
-    #     print(activation)
+    #for activation in  env.activations():
+    #    print(activation)
     env.run()
-    # for fact in  env.facts():
-    #     print(fact)
-    
+    #for fact in  env.facts():
+    #    print(fact)
+    polygon = env.find_template('polygon')
+    # for slot in polygon.slots():
+    #     if(slot.name == 'nama'):
+    #         our_slot = slot
+    #         break
+    # print(clips.facts.slot_value(env, polygon, slot))
+    for i, fact in enumerate(env.facts()):
+        print(i)
+        factstr = str(fact)
+
+    print(factstr)
